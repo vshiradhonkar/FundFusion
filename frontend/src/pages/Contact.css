@@ -1,0 +1,126 @@
+/* ===============================
+   Contact Page — FundFusion Theme
+   =============================== */
+
+.contact-page {
+  min-height: calc(100vh - 120px);
+  background: radial-gradient(circle at bottom, #0b0b14, #1a012b);
+  color: #e5e7eb;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 60px 20px 80px;
+  font-family: "Inter", sans-serif;
+}
+
+/* Hero Section */
+.contact-hero {
+  max-width: 750px;
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.contact-title {
+  font-size: 38px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 12px;
+}
+
+.contact-title span {
+  color: #a855f7;
+}
+
+.contact-subtitle {
+  color: #ccc;
+  font-size: 17px;
+  margin-bottom: 30px;
+}
+
+/* Form Section */
+.contact-form {
+  width: 100%;
+  max-width: 600px;
+  background: rgba(17, 16, 25, 0.85);
+  padding: 30px 40px;
+  border-radius: 16px;
+  border: 1px solid rgba(168, 85, 247, 0.2);
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.1);
+  display: flex;
+  flex-direction: column;
+}
+
+.contact-form input,
+.contact-form textarea {
+  width: 100%;
+  margin-bottom: 14px;
+  padding: 14px 16px;
+  border: 1px solid #2b2b3d;
+  border-radius: 10px;
+  background: #181727;
+  color: #fff;
+  font-size: 15px;
+  transition: border 0.2s ease, box-shadow 0.2s ease;
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+  border-color: #a855f7;
+  box-shadow: 0 0 8px rgba(168, 85, 247, 0.3);
+  outline: none;
+}
+
+.contact-form textarea {
+  resize: vertical;
+  min-height: 130px;
+}
+
+/* Submit Button */
+.primary-btn {
+  align-self: flex-end;
+  background: #6d28d9;
+  color: #fff;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.25s ease;
+}
+
+.primary-btn:hover {
+  background: #8b38e0;
+}
+
+/* Responsive Layout */
+@media (max-width: 900px) {
+  .contact-title {
+    font-size: 32px;
+  }
+  .contact-subtitle {
+    font-size: 16px;
+  }
+  .contact-form {
+    padding: 24px;
+  }
+}
+
+@media (max-width: 600px) {
+  .contact-page {
+    padding: 40px 14px 60px;
+  }
+  .contact-title {
+    font-size: 26px;
+  }
+  .contact-subtitle {
+    font-size: 15px;
+  }
+  .contact-form {
+    padding: 20px;
+  }
+  .primary-btn {
+    width: 100%;
+    text-align: center;
+  }
+}

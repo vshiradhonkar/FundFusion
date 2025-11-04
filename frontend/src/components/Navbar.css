@@ -1,0 +1,182 @@
+/* =======================
+   Base Navbar Styling
+   ======================= */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 32px;
+  gap: 16px;
+  background: #0b0b14;
+  color: #fff;
+  border-bottom: 1px solid rgba(168, 85, 247, 0.3);
+  box-shadow: 0 2px 10px rgba(168, 85, 247, 0.08);
+  z-index: 1000;
+  transition: all 0.3s ease;
+}
+
+.nav-left,
+.nav-center,
+.nav-right {
+  display: flex;
+  align-items: center;
+}
+.nav-center {
+  gap: 22px;
+}
+
+.nav-logo {
+  font-weight: 700;
+  font-size: 20px;
+  color: #fff;
+  text-decoration: none;
+}
+.nav-logo span {
+  color: #a855f7;
+}
+
+/* =======================
+   Nav Links
+   ======================= */
+.nav-center a {
+  color: #cfcfe6;
+  text-decoration: none;
+  font-size: 14px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  transition: 0.2s;
+}
+.nav-center a:hover {
+  color: #a855f7;
+  background: rgba(168, 85, 247, 0.08);
+}
+.nav-center a.active {
+  color: #a855f7;
+  background: rgba(168, 85, 247, 0.16);
+}
+
+/* =======================
+   Right Section
+   ======================= */
+.nav-right {
+  gap: 14px;
+}
+.role-text {
+  color: #a855f7;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+.logout-btn {
+  background: transparent;
+  border: 1px solid #a855f7;
+  color: #a855f7;
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.logout-btn:hover {
+  background: #a855f7;
+  color: #fff;
+}
+
+/* =======================
+   Mobile Toggle Button
+   ======================= */
+.nav-toggle {
+  display: none;
+  background: transparent;
+  border: none;
+  color: #a855f7;
+  cursor: pointer;
+  z-index: 1100;
+  transition: color 0.2s ease;
+}
+
+.nav-toggle:hover {
+  color: #c084fc;
+}
+
+/* =======================
+   Responsive Layout
+   ======================= */
+@media (max-width: 900px) {
+  .navbar {
+    padding: 12px 18px;
+  }
+
+  /* Show toggle icon */
+  .nav-toggle {
+    display: block;
+  }
+
+  /* Hide nav links by default */
+  .nav-center {
+    position: absolute;
+    top: 64px;
+    left: 0;
+    width: 100%;
+    background: #0b0b14;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 16px 24px;
+    gap: 12px;
+    border-bottom: 1px solid rgba(168, 85, 247, 0.2);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3);
+    display: none;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+  }
+
+  /* When menu is toggled open */
+  .nav-center.open {
+    display: flex;
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Mobile links spacing */
+  .nav-center a {
+    width: 100%;
+    text-align: left;
+    padding: 10px 0;
+    font-size: 16px;
+  }
+
+  /* Right section cleanup */
+  .nav-right {
+    margin-left: auto;
+  }
+}
+
+/* =======================
+   Body Offset
+   ======================= */
+.page-body {
+  padding-top: 90px;
+}
+
+/* =======================
+   Tiny Screen Fixes
+   ======================= */
+@media (max-width: 480px) {
+  .nav-logo {
+    font-size: 18px;
+  }
+
+  .logout-btn {
+    padding: 5px 10px;
+    font-size: 13px;
+  }
+
+  .nav-center a {
+    font-size: 15px;
+  }
+}

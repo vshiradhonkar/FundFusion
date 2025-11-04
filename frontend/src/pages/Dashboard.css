@@ -1,0 +1,270 @@
+/* ---------- Base Dashboard Layout ---------- */
+.dashboard-content {
+  max-width: 1100px;
+  margin: 0 auto;
+  min-height: calc(100vh - 90px);
+  padding: 30px 20px 60px;
+  color: #fff;
+  background: #0b0b14;
+  box-sizing: border-box;
+}
+
+/* ---------- Headers ---------- */
+h1 {
+  font-size: 34px;
+  margin: 6px 0 16px;
+  color: #e5e7eb;
+  word-break: break-word;
+}
+
+.section-title {
+  color: #a855f7;
+  margin: 10px 0 18px;
+  font-weight: 600;
+}
+
+/* ---------- Action Header ---------- */
+.dash-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap; /* ✅ wraps gracefully on smaller screens */
+}
+
+.primary-btn {
+  background: #6d28d9;
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: 0.2s ease-in-out;
+}
+
+.primary-btn:hover {
+  filter: brightness(1.08);
+}
+
+/* ---------- Cards Grid ---------- */
+.card-grid {
+  display: grid;
+  gap: 22px;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  margin-top: 20px;
+}
+
+.card {
+  background: #161626;
+  border: 1px solid #2b2b3d;
+  border-radius: 14px;
+  padding: 18px;
+  box-shadow: 0 0 15px rgba(168, 85, 247, 0.15);
+  transition: 0.25s;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0 25px rgba(168, 85, 247, 0.3);
+}
+
+.card h3 {
+  color: #e6e6ff;
+  margin: 0 0 8px;
+}
+
+.card p {
+  color: #c7c7d1;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* ---------- Meta Row ---------- */
+.meta-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 12px;
+  flex-wrap: wrap; /* ✅ prevents overlap when space is tight */
+}
+
+.badge {
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  background: #27273a;
+  color: #cfcfe6;
+  text-transform: capitalize;
+}
+
+.badge.pending {
+  background: #1f1b37;
+  color: #c7b7ff;
+}
+
+.badge.approved {
+  background: #0f2f22;
+  color: #22c55e;
+}
+
+.badge.rejected {
+  background: #3b0f17;
+  color: #ef4444;
+}
+
+/* ---------- Buttons ---------- */
+.btn-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.approve-btn,
+.reject-btn {
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.approve-btn {
+  background: #22c55e;
+}
+
+.reject-btn {
+  background: #ef4444;
+}
+
+.approve-btn:hover,
+.reject-btn:hover {
+  opacity: 0.9;
+}
+
+/* ---------- Misc ---------- */
+.muted {
+  color: #a3a3b4;
+  text-align: center;
+  margin-top: 20px;
+}
+
+/* ---------- Form Styles ---------- */
+.pitch-form {
+  max-width: 700px;
+  margin-top: 20px;
+}
+
+.pitch-form input,
+.pitch-form textarea {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border-radius: 10px;
+  border: 1px solid #2b2b3d;
+  background: #181727;
+  color: #fff;
+  box-sizing: border-box;
+}
+
+.pitch-form textarea {
+  min-height: 140px;
+  resize: vertical;
+}
+
+/* ---------- Responsive Tweaks ---------- */
+
+/* Tablets (≤ 992px) */
+@media (max-width: 992px) {
+  .dashboard-content {
+    padding: 25px 16px 50px;
+  }
+
+  h1 {
+    font-size: 30px;
+  }
+
+  .primary-btn {
+    padding: 9px 14px;
+    font-size: 15px;
+  }
+
+  .card-grid {
+    gap: 18px;
+  }
+}
+
+/* Mobile Landscape (≤ 768px) */
+@media (max-width: 768px) {
+  .dashboard-content {
+    padding: 20px 14px 40px;
+  }
+
+  h1 {
+    font-size: 26px;
+  }
+
+  .section-title {
+    font-size: 18px;
+  }
+
+  .card {
+    padding: 16px;
+  }
+
+  .card-grid {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+
+  .approve-btn,
+  .reject-btn {
+    flex: 1; /* ✅ fill available width */
+    text-align: center;
+  }
+}
+
+/* Mobile Portrait (≤ 480px) */
+@media (max-width: 480px) {
+  .dashboard-content {
+    padding: 18px 12px 35px;
+  }
+
+  h1 {
+    font-size: 22px;
+    text-align: center;
+  }
+
+  .section-title {
+    font-size: 16px;
+    text-align: center;
+  }
+
+  .dash-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .primary-btn {
+    width: 100%;
+    text-align: center;
+  }
+
+  .card-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .card {
+    padding: 14px;
+  }
+
+  .badge {
+    font-size: 11px;
+    padding: 5px 10px;
+  }
+}

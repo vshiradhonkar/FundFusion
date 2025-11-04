@@ -1,0 +1,89 @@
+/* ===============================
+   About Page — FundFusion Theme
+   =============================== */
+
+.about-page {
+  min-height: calc(100vh - 120px);
+  background: radial-gradient(circle at top, #1a012b, #0b0b14);
+  color: #e5e7eb;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: center;
+  padding: 60px 20px 80px;
+  font-family: "Inter", sans-serif;
+}
+
+/* Hero Section */
+.about-hero {
+  max-width: 800px;
+  margin-bottom: 30px;
+}
+
+.about-title {
+  font-size: 38px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: #ffffff;
+}
+
+.about-title span {
+  color: #a855f7;
+}
+
+.about-tagline {
+  font-size: 18px;
+  color: #ccc;
+  margin-bottom: 40px;
+  font-style: italic;
+}
+
+/* Content Section */
+.about-content {
+  max-width: 850px;
+  background: rgba(17, 16, 25, 0.85);
+  border-radius: 16px;
+  padding: 30px 40px;
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.15);
+  border: 1px solid rgba(168, 85, 247, 0.2);
+  text-align: left;
+}
+
+.about-content p {
+  font-size: 16px;
+  color: #cfcfe6;
+  line-height: 1.7;
+  margin-bottom: 18px;
+}
+
+/* Responsive Layout */
+@media (max-width: 900px) {
+  .about-content {
+    padding: 24px;
+  }
+  .about-title {
+    font-size: 32px;
+  }
+  .about-tagline {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 600px) {
+  .about-page {
+    padding: 40px 14px 60px;
+  }
+  .about-content {
+    padding: 20px;
+  }
+  .about-title {
+    font-size: 26px;
+  }
+  .about-tagline {
+    font-size: 15px;
+  }
+  .about-content p {
+    font-size: 15px;
+  }
+}

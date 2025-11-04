@@ -1,0 +1,38 @@
+.footer {
+  background: #0b0b14;
+  color: #999;
+  text-align: center;
+  padding: 15px 10px;
+  border-top: 1px solid #2b2b3d;
+  font-size: 13px;
+  width: 100%;
+  bottom: 0;
+  left: 0;
+  position: relative; /* 🔁 changed from fixed to relative for better mobile behavior */
+  line-height: 1.4;
+}
+
+/* Sticky footer behavior only on tall screens */
+@media (min-height: 700px) {
+  .footer {
+    position: sticky;
+    bottom: 0;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .footer {
+    font-size: 12px;
+    padding: 12px 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer {
+    font-size: 11px;
+    padding: 10px 6px;
+    text-align: center;
+    line-height: 1.5;
+  }
+}
