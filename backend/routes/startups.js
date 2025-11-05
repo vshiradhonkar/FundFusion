@@ -13,23 +13,27 @@ import db from "../db.js";
 const router = express.Router();
 
 /**
- * @route POST /api/startups/create
- * @desc Startup creates a pitch
+ * =====================================================
+ * STARTUP ROUTES — Handles Pitches, Approvals & Listings
+ * =====================================================
  */
-router.post("/create", authMiddleware, createPitch);
 
 /**
- * @route GET /api/startups/all
- * @desc Investors fetch all approved startups
+ * @route POST /api/startups/create
+ * @desc Startup creates a new pitch
  */
-router.get("/all", getApprovedStartups);
+router.post("/create", authMiddleware, async (req, res, next) => {
+  console.log("➡️ POST /api/startups/create");
+  next();
+}, createPitch);
 
 /**
  * @route GET /api/startups/my-pitches
- * @desc Startup fetches their own submitted pitches
- * 🧠 NOTE: must come BEFORE /:id to prevent route conflicts
+ * @desc Startup fetches their own pitches
+ * ✅ Must come BEFORE /:id to prevent conflicts
  */
 router.get("/my-pitches", authMiddleware, async (req, res) => {
+  console.log("➡️ GET /api/startups/my-pitches");
   try {
     const [rows] = await db.query("SELECT * FROM startups WHERE user_id=?", [req.user.id]);
     return res.json(rows);
@@ -43,21 +47,46 @@ router.get("/my-pitches", authMiddleware, async (req, res) => {
 });
 
 /**
- * @route GET /api/startups/:id
- * @desc Fetch a startup by ID
+ * @route GET /api/startups/all
+ * @desc Investors fetch all approved startups
  */
-router.get("/:id", getStartupById);
+router.get("/all", async (req, res, next) => {
+  console.log("➡️ GET /api/startups/all");
+  next();
+}, getApprovedStartups);
+
+/**
+ * ===============================
+ * 🧑‍⚖️ ADMIN-ONLY ROUTES
+ * ===============================
+ */
 
 /**
  * @route GET /api/startups/pending/list
- * @desc Admin fetches all pending startup pitches
+ * @desc Admin fetches all pending pitches
  */
-router.get("/pending/list", authMiddleware, adminOnly, getPending);
+router.get("/pending/list", authMiddleware, adminOnly, async (req, res, next) => {
+  console.log("➡️ GET /api/startups/pending/list");
+  next();
+}, getPending);
 
 /**
  * @route POST /api/startups/pending/:id/approve
  * @desc Admin approves or rejects a startup pitch
  */
-router.post("/pending/:id/approve", authMiddleware, adminOnly, updateStatus);
+router.post("/pending/:id/approve", authMiddleware, adminOnly, async (req, res, next) => {
+  console.log(`➡️ POST /api/startups/pending/${req.params.id}/approve`);
+  next();
+}, updateStatus);
+
+/**
+ * @route GET /api/startups/:id
+ * @desc Fetch startup by ID
+ * ⚠️ Keep this LAST — it matches any /:id
+ */
+router.get("/:id", async (req, res, next) => {
+  console.log(`➡️ GET /api/startups/${req.params.id}`);
+  next();
+}, getStartupById);
 
 export default router;

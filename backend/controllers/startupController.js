@@ -1,14 +1,16 @@
 import db from "../db.js";
 
 /**
- * @desc Create a new startup pitch
+ * @desc Startup creates a new pitch
  * @route POST /api/startups/create
  */
 export async function createPitch(req, res) {
   const { name, pitch_text, money_requested, equity_offered } = req.body;
 
   if (!name || !pitch_text || !money_requested) {
-    return res.status(400).json({ success: false, message: "Missing required fields" });
+    return res
+      .status(400)
+      .json({ success: false, message: "Missing required fields" });
   }
 
   try {
@@ -39,12 +41,18 @@ export async function createPitch(req, res) {
 export async function getApprovedStartups(req, res) {
   try {
     const [rows] = await db.query(
-      "SELECT * FROM startups WHERE status='approved' ORDER BY id DESC"
+      `SELECT s.*, u.name AS founder_name, u.email AS founder_email
+       FROM startups s
+       JOIN users u ON s.user_id = u.id
+       WHERE s.status = 'approved'
+       ORDER BY s.id DESC`
     );
     return res.json(rows);
   } catch (err) {
     console.error("❌ Error fetching approved startups:", err);
-    return res.status(500).json({ success: false, message: "Server error" });
+    return res
+      .status(500)
+      .json({ success: false, message: "Server error fetching startups" });
   }
 }
 
@@ -54,35 +62,53 @@ export async function getApprovedStartups(req, res) {
  */
 export async function getStartupById(req, res) {
   try {
-    const [rows] = await db.query("SELECT * FROM startups WHERE id=?", [req.params.id]);
+    const [rows] = await db.query(
+      `SELECT s.*, u.name AS founder_name, u.email AS founder_email
+       FROM startups s
+       JOIN users u ON s.user_id = u.id
+       WHERE s.id = ?`,
+      [req.params.id]
+    );
+
     if (!rows[0]) {
-      return res.status(404).json({ success: false, message: "Startup not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Startup not found" });
     }
+
     return res.json(rows[0]);
   } catch (err) {
     console.error("⚠️ Error fetching startup by ID:", err);
-    return res.status(500).json({ success: false, message: "Server error" });
+    return res
+      .status(500)
+      .json({ success: false, message: "Server error while fetching startup" });
   }
 }
 
 /**
- * @desc Get all pending startup pitches (for admin review)
+ * @desc Get all pending startup pitches (for admin)
  * @route GET /api/startups/pending/list
  */
 export async function getPending(req, res) {
   try {
     const [rows] = await db.query(
-      "SELECT * FROM startups WHERE status='pending' ORDER BY id DESC"
+      `SELECT s.*, u.name AS founder_name, u.email AS founder_email
+       FROM startups s
+       JOIN users u ON s.user_id = u.id
+       WHERE s.status='pending'
+       ORDER BY s.id DESC`
     );
     return res.json(rows);
   } catch (err) {
     console.error("⚠️ Error fetching pending startups:", err);
-    return res.status(500).json({ success: false, message: "Server error" });
+    return res
+      .status(500)
+      .json({ success: false, message: "Server error while fetching pending" });
   }
 }
 
 /**
- * @desc Update startup pitch status (approve/reject)
+ * @desc Update startup status (approve/reject) by Admin
  * @route POST /api/startups/pending/:id/approve
  */
 export async function updateStatus(req, res) {
@@ -93,15 +119,35 @@ export async function updateStatus(req, res) {
     return res.status(400).json({ success: false, message: "Invalid action" });
   }
 
+  const newStatus = action === "approve" ? "approved" : "rejected";
+
   try {
-    const newStatus = action === "approve" ? "approved" : "rejected";
-    const [result] = await db.query("UPDATE startups SET status=? WHERE id=?", [
+    // 1️⃣ Confirm startup exists
+    const [[startup]] = await db.query("SELECT * FROM startups WHERE id = ?", [
+      req.params.id,
+    ]);
+    if (!startup) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Startup not found" });
+    }
+
+    // 2️⃣ Update startup status
+    await db.query("UPDATE startups SET status = ? WHERE id = ?", [
       newStatus,
       req.params.id,
     ]);
 
-    if (result.affectedRows === 0) {
-      return res.status(404).json({ success: false, message: "Startup not found" });
+    // 3️⃣ Optional: Auto-log admin decision in a lightweight audit table
+    await db.query(
+      `INSERT INTO startup_audit (startup_id, admin_id, action_taken, timestamp)
+       VALUES (?, ?, ?, NOW())`,
+      [req.params.id, req.user.id, newStatus]
+    );
+
+    // 4️⃣ If approved, notify investor route (placeholder for socket/email)
+    if (newStatus === "approved") {
+      console.log(`✅ Startup ${startup.name} approved by admin.`);
     }
 
     return res.json({
@@ -111,6 +157,9 @@ export async function updateStatus(req, res) {
     });
   } catch (err) {
     console.error("⚠️ Error updating startup status:", err);
-    return res.status(500).json({ success: false, message: "Server error while updating status" });
+    return res.status(500).json({
+      success: false,
+      message: "Server error while updating startup status",
+    });
   }
 }

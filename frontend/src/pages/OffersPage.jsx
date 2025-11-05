@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { toast } from "react-toastify"; // ✅ Import toast
+import { toast } from "react-toastify";
 import "./Dashboard.css";
 
 const OffersPage = () => {
@@ -26,18 +26,36 @@ const OffersPage = () => {
           res = await axios.get("http://localhost:5000/api/offers/investor", {
             headers: { Authorization: `Bearer ${token}` },
           });
-        } else {
-          // ✅ Fetch offers received by a startup
-          const startupId = localStorage.getItem("startupId") || 1;
+        } else if (role === "startup") {
+          // ✅ Fetch startup ID dynamically
+          const pitchRes = await axios.get(
+            "http://localhost:5000/api/startups/my-pitches",
+            { headers: { Authorization: `Bearer ${token}` } }
+          );
+
+          if (!pitchRes.data.length) {
+            toast.info("You haven’t submitted any startup pitches yet.");
+            setOffers([]);
+            setLoading(false);
+            return;
+          }
+
+          const startupId = pitchRes.data[0].id;
+          console.log("📦 Fetched Startup ID:", startupId);
+
+          // ✅ Fetch offers received for this startup
           res = await axios.get(
             `http://localhost:5000/api/offers/startup/${startupId}`,
             { headers: { Authorization: `Bearer ${token}` } }
           );
+        } else {
+          toast.error("Invalid user role.");
+          return;
         }
 
         setOffers(Array.isArray(res.data) ? res.data : []);
 
-        if (res.data.length === 0) {
+        if (!res.data.length) {
           toast.info("No offers available yet.");
         }
       } catch (err) {
@@ -73,6 +91,7 @@ const OffersPage = () => {
     }
   };
 
+  // 🌀 Loading state
   if (loading) {
     return (
       <div className="dashboard-content">
@@ -82,6 +101,7 @@ const OffersPage = () => {
     );
   }
 
+  // 🗃️ Main content
   return (
     <div className="dashboard-content">
       <h1>{role === "investor" ? "My Offers" : "Received Offers"}</h1>
@@ -100,7 +120,7 @@ const OffersPage = () => {
               </p>
               <p>Status: {o.status}</p>
 
-              {role !== "investor" && o.status === "pending" && (
+              {role === "startup" && o.status === "pending" && (
                 <div className="btn-row">
                   <button
                     className="approve-btn"

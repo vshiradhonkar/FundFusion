@@ -2,46 +2,49 @@ import express from "express";
 import {
   makeOffer,
   getOffersForStartup,
+  getOffersForInvestor,
   acceptOffer,
+  rejectOffer, // ✅ newly added
 } from "../controllers/offerController.js";
 import { authMiddleware } from "../middleware/authMiddleware.js";
-import db from "../db.js";
 
 const router = express.Router();
 
 /**
- * @route POST /api/offers/make
- * @desc Investor creates a new offer for a startup
+ * Offer Routes
+ * -------------
+ * Handles investor offer creation, startup offer management,
+ * and retrieval for both sides.
  */
-router.post("/make", authMiddleware, makeOffer);
 
-/**
- * @route GET /api/offers/startup/:startupId
- * @desc Fetch all offers for a specific startup
- */
-router.get("/startup/:startupId", authMiddleware, getOffersForStartup);
+// 🟢 Investor creates a new offer for a startup
+router.post("/make", authMiddleware, (req, res, next) => {
+  console.log("➡️ POST /api/offers/make");
+  next();
+}, makeOffer);
 
-/**
- * @route GET /api/offers/investor
- * @desc Fetch all offers made by the logged-in investor
- */
-router.get("/investor", authMiddleware, async (req, res) => {
-  try {
-    const [rows] = await db.query(
-      "SELECT * FROM offers WHERE investor_id = ? ORDER BY id DESC",
-      [req.user.id]
-    );
-    return res.json(rows);
-  } catch (err) {
-    console.error("❌ Error fetching investor offers:", err);
-    return res.status(500).json({ success: false, message: "Server error" });
-  }
-});
+// 🟣 Get all offers for a specific startup (startup view)
+router.get("/startup/:startupId", authMiddleware, (req, res, next) => {
+  console.log("➡️ GET /api/offers/startup/" + req.params.startupId);
+  next();
+}, getOffersForStartup);
 
-/**
- * @route POST /api/offers/accept/:offerId
- * @desc Startup accepts or rejects an offer (handled by controller)
- */
-router.post("/accept/:offerId", authMiddleware, acceptOffer);
+// 🔵 Get all offers made by the logged-in investor
+router.get("/investor", authMiddleware, (req, res, next) => {
+  console.log("➡️ GET /api/offers/investor");
+  next();
+}, getOffersForInvestor);
+
+// 🟠 Startup accepts an offer — creates a deal
+router.post("/accept/:offerId", authMiddleware, (req, res, next) => {
+  console.log("➡️ POST /api/offers/accept/" + req.params.offerId);
+  next();
+}, acceptOffer);
+
+// 🔴 Startup rejects an offer
+router.post("/reject/:offerId", authMiddleware, (req, res, next) => {
+  console.log("➡️ POST /api/offers/reject/" + req.params.offerId);
+  next();
+}, rejectOffer);
 
 export default router;
