@@ -1,39 +1,37 @@
-/* ---------- Base Dashboard Layout ---------- */
 .dashboard-content {
-  max-width: 1100px;
+  max-width: 1550px;
   margin: 0 auto;
   min-height: calc(100vh - 90px);
   padding: 30px 20px 60px;
-  color: #fff;
-  background: #0b0b14;
+  color: #cfcfe6;
+  background: radial-gradient(circle at top, #0b0b14, #1a012b);
   box-sizing: border-box;
+  font-family: "Inter", sans-serif;
 }
 
-/* ---------- Headers ---------- */
 h1 {
   font-size: 34px;
-  margin: 6px 0 16px;
-  color: #e5e7eb;
+  margin: 6px 0 18px;
+  color: #ffffff;
   word-break: break-word;
 }
 
 .section-title {
   color: #a855f7;
-  margin: 10px 0 18px;
+  margin: 12px 0 20px;
   font-weight: 600;
 }
 
-/* ---------- Action Header ---------- */
 .dash-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 14px;
-  flex-wrap: wrap; /* ✅ wraps gracefully on smaller screens */
+  flex-wrap: wrap;
 }
 
 .primary-btn {
-  background: #6d28d9;
+  background: linear-gradient(90deg, #6d28d9, #8b5cf6);
   color: #fff;
   border: none;
   padding: 10px 16px;
@@ -41,54 +39,57 @@ h1 {
   font-weight: 600;
   cursor: pointer;
   text-decoration: none;
-  transition: 0.2s ease-in-out;
+  transition: all 0.25s ease-in-out;
+  box-shadow: 0 0 10px rgba(168, 85, 247, 0.25);
 }
 
 .primary-btn:hover {
-  filter: brightness(1.08);
+  background: linear-gradient(90deg, #8b5cf6, #a855f7);
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.35);
+  transform: translateY(-2px);
 }
 
-/* ---------- Cards Grid ---------- */
 .card-grid {
   display: grid;
   gap: 22px;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  margin-top: 20px;
+  margin-top: 22px;
 }
 
 .card {
-  background: #161626;
-  border: 1px solid #2b2b3d;
-  border-radius: 14px;
-  padding: 18px;
-  box-shadow: 0 0 15px rgba(168, 85, 247, 0.15);
-  transition: 0.25s;
+  background: rgba(24, 23, 39, 0.95);
+  border: 1px solid rgba(168, 85, 247, 0.25);
+  border-radius: 16px;
+  padding: 22px;
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.1);
+  transition: all 0.25s ease;
 }
 
 .card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 0 25px rgba(168, 85, 247, 0.3);
+  transform: translateY(-4px);
+  box-shadow: 0 0 30px rgba(168, 85, 247, 0.25);
 }
 
 .card h3 {
-  color: #e6e6ff;
-  margin: 0 0 8px;
+  color: #ffffff;
+  margin-bottom: 8px;
 }
 
 .card p {
-  color: #c7c7d1;
-  font-size: 14px;
-  line-height: 1.5;
+  color: #ffffff;
+  font-size: 15px;
+  line-height: 1.6;
 }
 
-/* ---------- Meta Row ---------- */
 .meta-row {
+  color: #ffffff;
+  font-weight: bold;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
   margin-top: 12px;
-  flex-wrap: wrap; /* ✅ prevents overlap when space is tight */
+  flex-wrap: wrap;
 }
 
 .badge {
@@ -116,7 +117,6 @@ h1 {
   color: #ef4444;
 }
 
-/* ---------- Buttons ---------- */
 .btn-row {
   display: flex;
   gap: 10px;
@@ -147,29 +147,43 @@ h1 {
   opacity: 0.9;
 }
 
-/* ---------- Misc ---------- */
 .muted {
   color: #a3a3b4;
   text-align: center;
   margin-top: 20px;
 }
 
-/* ---------- Form Styles ---------- */
 .pitch-form {
   max-width: 700px;
-  margin-top: 20px;
+  margin: 40px auto 0;
+  padding: 30px 28px;
+  background: rgba(24, 23, 39, 0.85);
+  border: 1px solid rgba(168, 85, 247, 0.25);
+  border-radius: 16px;
+  box-shadow: 0 0 25px rgba(168, 85, 247, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .pitch-form input,
 .pitch-form textarea {
   width: 100%;
-  padding: 12px;
-  margin: 10px 0;
+  padding: 12px 14px;
   border-radius: 10px;
-  border: 1px solid #2b2b3d;
+  border: 1px solid rgba(168, 85, 247, 0.25);
   background: #181727;
-  color: #fff;
+  color: #ffffff;
+  font-size: 15px;
   box-sizing: border-box;
+  transition: 0.2s;
+}
+
+.pitch-form input:focus,
+.pitch-form textarea:focus {
+  border-color: #a855f7;
+  box-shadow: 0 0 8px rgba(168, 85, 247, 0.3);
+  outline: none;
 }
 
 .pitch-form textarea {
@@ -177,92 +191,87 @@ h1 {
   resize: vertical;
 }
 
-/* ---------- Responsive Tweaks ---------- */
+.pitch-form button {
+  align-self: flex-end;
+  background: linear-gradient(90deg, #6d28d9, #8b5cf6);
+  color: #fff;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease-in-out;
+  box-shadow: 0 0 10px rgba(168, 85, 247, 0.25);
+}
 
-/* Tablets (≤ 992px) */
+.pitch-form button:hover {
+  background: linear-gradient(90deg, #8b5cf6, #a855f7);
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.35);
+  transform: translateY(-2px);
+}
+
 @media (max-width: 992px) {
   .dashboard-content {
     padding: 25px 16px 50px;
   }
-
   h1 {
     font-size: 30px;
   }
-
   .primary-btn {
-    padding: 9px 14px;
     font-size: 15px;
   }
-
   .card-grid {
     gap: 18px;
   }
 }
 
-/* Mobile Landscape (≤ 768px) */
 @media (max-width: 768px) {
   .dashboard-content {
     padding: 20px 14px 40px;
   }
-
   h1 {
     font-size: 26px;
   }
-
-  .section-title {
-    font-size: 18px;
-  }
-
   .card {
     padding: 16px;
   }
-
   .card-grid {
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   }
-
   .approve-btn,
   .reject-btn {
-    flex: 1; /* ✅ fill available width */
-    text-align: center;
+    flex: 1;
+  }
+  .pitch-form {
+    padding: 24px;
   }
 }
 
-/* Mobile Portrait (≤ 480px) */
 @media (max-width: 480px) {
   .dashboard-content {
     padding: 18px 12px 35px;
   }
-
   h1 {
     font-size: 22px;
     text-align: center;
   }
-
-  .section-title {
-    font-size: 16px;
-    text-align: center;
-  }
-
   .dash-header {
     flex-direction: column;
-    align-items: stretch;
     gap: 10px;
   }
-
   .primary-btn {
     width: 100%;
     text-align: center;
   }
-
   .card-grid {
     grid-template-columns: 1fr;
   }
-
   .card {
     padding: 14px;
   }
-
+  .pitch-form {
+    padding: 20px;
+  }
   .badge {
     font-size: 11px;
     padding: 5px 10px;

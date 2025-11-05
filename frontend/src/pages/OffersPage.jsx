@@ -22,12 +22,12 @@ const OffersPage = () => {
         let res;
 
         if (role === "investor") {
-          // ✅ Fetch offers made by the investor
+          //fetch ofers made by investor
           res = await axios.get("http://localhost:5000/api/offers/investor", {
             headers: { Authorization: `Bearer ${token}` },
           });
         } else if (role === "startup") {
-          // ✅ Fetch startup ID dynamically
+          //fetch startup ID dynamically
           const pitchRes = await axios.get(
             "http://localhost:5000/api/startups/my-pitches",
             { headers: { Authorization: `Bearer ${token}` } }
@@ -43,7 +43,7 @@ const OffersPage = () => {
           const startupId = pitchRes.data[0].id;
           console.log("📦 Fetched Startup ID:", startupId);
 
-          // ✅ Fetch offers received for this startup
+          // fetch ofers received 4 startup
           res = await axios.get(
             `http://localhost:5000/api/offers/startup/${startupId}`,
             { headers: { Authorization: `Bearer ${token}` } }
@@ -91,7 +91,7 @@ const OffersPage = () => {
     }
   };
 
-  // 🌀 Loading state
+
   if (loading) {
     return (
       <div className="dashboard-content">
@@ -101,7 +101,7 @@ const OffersPage = () => {
     );
   }
 
-  // 🗃️ Main content
+
   return (
     <div className="dashboard-content">
       <h1>{role === "investor" ? "My Offers" : "Received Offers"}</h1>

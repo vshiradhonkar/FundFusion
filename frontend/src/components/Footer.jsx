@@ -2,7 +2,7 @@ import React from "react";
 import "./Footer.css";
 
 const Footer = () => {
-  const year = new Date().getFullYear();
+  
 
   return (
     <footer className="footer">
@@ -12,7 +12,7 @@ const Footer = () => {
         </h3>
         <p className="footer-tagline">Empowering Innovation. Connecting Visionaries.</p>
         <p className="footer-copy">
-          © {year} FundFusion PitchHub • All Rights Reserved
+          © 2025 FundFusion PitchHub • All Rights Reserved
         </p>
       </div>
     </footer>

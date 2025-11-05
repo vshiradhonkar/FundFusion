@@ -2,12 +2,7 @@ import mysql from "mysql2/promise";
 import dotenv from "dotenv";
 dotenv.config();
 
-/**
- * Database Connection
- * -------------------
- * Creates a MySQL connection pool with detailed logging and
- * auto-reconnection behavior for better resilience.
- */
+/*creates a MySQL connection pool*/
 
 const pool = mysql.createPool({
   host: process.env.DB_HOST || "localhost",
@@ -19,10 +14,7 @@ const pool = mysql.createPool({
   queueLimit: 0,
 });
 
-/**
- * Test the connection immediately on startup.
- * Logs success or failure in the console.
- */
+/*test the connectionon startup */
 (async () => {
   try {
     const connection = await pool.getConnection();
@@ -33,13 +25,11 @@ const pool = mysql.createPool({
     console.error("   Host:", process.env.DB_HOST);
     console.error("   Database:", process.env.DB_NAME);
     console.error("   Error:", err.message);
-    process.exit(1); // Exit to avoid silent app hangs
+    process.exit(1); 
   }
 })();
 
-/**
- * Graceful shutdown for pool when process exits.
- */
+
 process.on("SIGINT", async () => {
   try {
     console.log("🔻 Closing MySQL connection pool...");

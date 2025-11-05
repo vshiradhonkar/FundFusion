@@ -21,7 +21,9 @@ const Home = () => {
           </a>
         </div>
       </div>
+        
       <Vision/>
+
     </div>
   );
 };

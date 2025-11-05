@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../Auth.css";
 import axios from "axios";
-import { toast } from "react-toastify"; // ✅ Toastify import
+import { toast } from "react-toastify";
 
 const Register = () => {
   const [name, setName] = useState("");
@@ -15,7 +15,6 @@ const Register = () => {
   const handleRegister = async (e) => {
     e.preventDefault();
 
-    // Simple validation with instant feedback
     if (!name || !email || !password) {
       toast.warn("⚠️ Please fill all required fields.");
       return;

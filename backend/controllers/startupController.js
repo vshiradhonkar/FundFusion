@@ -1,7 +1,7 @@
 import db from "../db.js";
 
 /**
- * @desc Startup creates a new pitch
+ *Startup creates a new pitch
  * @route POST /api/startups/create
  */
 export async function createPitch(req, res) {
@@ -35,7 +35,7 @@ export async function createPitch(req, res) {
 }
 
 /**
- * @desc Get all approved startups (visible to investors)
+ *Get all approved startups (visible to investors)
  * @route GET /api/startups/all
  */
 export async function getApprovedStartups(req, res) {
@@ -57,7 +57,7 @@ export async function getApprovedStartups(req, res) {
 }
 
 /**
- * @desc Get single startup by ID
+ *Get single startup by ID
  * @route GET /api/startups/:id
  */
 export async function getStartupById(req, res) {
@@ -86,7 +86,7 @@ export async function getStartupById(req, res) {
 }
 
 /**
- * @desc Get all pending startup pitches (for admin)
+ * Get all pending startup pitches (for admin)
  * @route GET /api/startups/pending/list
  */
 export async function getPending(req, res) {
@@ -108,7 +108,7 @@ export async function getPending(req, res) {
 }
 
 /**
- * @desc Update startup status (approve/reject) by Admin
+ * Update startup status (approve/reject) by Admin
  * @route POST /api/startups/pending/:id/approve
  */
 export async function updateStatus(req, res) {
@@ -122,7 +122,7 @@ export async function updateStatus(req, res) {
   const newStatus = action === "approve" ? "approved" : "rejected";
 
   try {
-    // 1️⃣ Confirm startup exists
+    //Confirm startup exists
     const [[startup]] = await db.query("SELECT * FROM startups WHERE id = ?", [
       req.params.id,
     ]);
@@ -132,20 +132,20 @@ export async function updateStatus(req, res) {
         .json({ success: false, message: "Startup not found" });
     }
 
-    // 2️⃣ Update startup status
+    //Update startup status
     await db.query("UPDATE startups SET status = ? WHERE id = ?", [
       newStatus,
       req.params.id,
     ]);
 
-    // 3️⃣ Optional: Auto-log admin decision in a lightweight audit table
+    //Auto-log admin decision in a lightweight audit table
     await db.query(
       `INSERT INTO startup_audit (startup_id, admin_id, action_taken, timestamp)
        VALUES (?, ?, ?, NOW())`,
       [req.params.id, req.user.id, newStatus]
     );
 
-    // 4️⃣ If approved, notify investor route (placeholder for socket/email)
+    //If approved, notify investor route
     if (newStatus === "approved") {
       console.log(`✅ Startup ${startup.name} approved by admin.`);
     }

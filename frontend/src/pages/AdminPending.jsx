@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { toast } from "react-toastify"; // ✅ Toastify
+import { toast } from "react-toastify";
 import "./Dashboard.css";
 
 const AdminPending = () => {
@@ -44,7 +44,6 @@ const AdminPending = () => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      // ✅ Optimistic UI update
       setPending((prev) => prev.filter((p) => p.id !== id));
 
       if (action === "approve") {

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { toast } from "react-toastify"; // ✅ import Toastify
+import { toast } from "react-toastify";
 import "./Dashboard.css";
 
 const StartupDashboard = () => {
@@ -16,7 +16,7 @@ const StartupDashboard = () => {
       }
 
       try {
-        // ✅ API call to fetch user's pitches
+        //fetch user's pitches
         const res = await axios.get(
           "http://localhost:5000/api/startups/my-pitches",
           {
@@ -26,7 +26,7 @@ const StartupDashboard = () => {
 
         setPitches(Array.isArray(res.data) ? res.data : []);
 
-        // ✅ If no pitches, show info toast once
+        //no pitches thn show info toast 1s
         if (res.data.length === 0) {
           toast.info("You haven’t created any pitches yet. Start one now!");
         }

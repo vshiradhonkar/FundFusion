@@ -2,14 +2,12 @@ import jwt from "jsonwebtoken";
 
 /**
  * Auth Middleware
- * -----------------
- * Validates JWT, attaches decoded user to req.user.
- * Provides detailed error logs for debugging.
+ * Validates JWT,attaches decoded user to req.user.Provides detailed error logs for debugging.
  */
 export function authMiddleware(req, res, next) {
   const authHeader = req.headers.authorization;
 
-  // 1️⃣ Check if token exists
+  //Check if token exists
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
     console.warn("🚫 No or malformed token header:", authHeader);
     return res
@@ -20,7 +18,7 @@ export function authMiddleware(req, res, next) {
   const token = authHeader.split(" ")[1];
 
   try {
-    // 2️⃣ Verify and decode token
+    //Verify and decode token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
     if (!decoded?.id || !decoded?.role) {
@@ -30,13 +28,13 @@ export function authMiddleware(req, res, next) {
         .json({ success: false, message: "Invalid token payload." });
     }
 
-    // 3️⃣ Attach user object to request
+    // Attach user object to request
     req.user = {
       id: decoded.id,
       role: decoded.role,
     };
 
-    // 4️⃣ Debug log for visibility
+    //Debug log for visibility
     console.log("✅ Authenticated user:", req.user);
 
     next();
@@ -48,9 +46,7 @@ export function authMiddleware(req, res, next) {
   }
 }
 
-/**
- * Admin-only route guard.
- */
+/*Admin-only route guard.*/
 export function adminOnly(req, res, next) {
   if (!req.user || req.user.role !== "admin") {
     console.warn("🚫 Unauthorized access attempt. Role:", req.user?.role);

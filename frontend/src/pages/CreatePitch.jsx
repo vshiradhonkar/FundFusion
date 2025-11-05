@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { toast } from "react-toastify"; // ✅ import toast
+import { toast } from "react-toastify";
 import "./Dashboard.css";
 
 const CreatePitch = () => {
@@ -21,7 +21,7 @@ const CreatePitch = () => {
     e.preventDefault();
     const token = localStorage.getItem("token");
 
-    // basic validation
+    
     if (!form.name || !form.pitch_text || !form.money_requested) {
       toast.warn("⚠️ Please fill all required fields!");
       return;

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { toast } from "react-toastify"; // ✅ import toast
+import { toast } from "react-toastify";
 import "./Dashboard.css";
 
 const InvestorDashboard = () => {
@@ -11,7 +11,7 @@ const InvestorDashboard = () => {
     const fetchStartups = async () => {
       const token = localStorage.getItem("token");
       try {
-        // ✅ Fetch all approved startups
+        //fetch approved startups
         const res = await axios.get("http://localhost:5000/api/startups/all", {
           headers: { Authorization: `Bearer ${token}` },
         });

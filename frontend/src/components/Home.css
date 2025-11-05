@@ -2,12 +2,12 @@
   min-height: calc(100vh - 120px);
   background: radial-gradient(circle at top, #1a012b, #0b0b14);
   display: flex;
-  flex-direction: column; /* ✅ stack content vertically */
+  flex-direction: column;
   align-items: center;
-  justify-content: flex-start; /* ✅ aligns to top instead of center */
+  justify-content: flex-start;
   text-align: center;
-  color: white;
-  padding: 80px 20px 0; /* ✅ top padding to avoid navbar overlap */
+  color: rgb(255, 255, 255);
+  padding: 80px 20px 0;
   overflow-x: hidden;
 }
 
@@ -15,7 +15,7 @@
 .home-content {
   max-width: 700px;
   padding: 40px 20px;
-  margin-bottom: 60px; /* ✅ spacing before vision section */
+  margin-bottom: 60px;
 }
 
 .home-title {
@@ -68,9 +68,6 @@
   color: white;
 }
 
-/* ---------- Responsive Tweaks ---------- */
-
-/* Tablets (≤ 992px) */
 @media (max-width: 992px) {
   .home-content {
     max-width: 600px;
@@ -91,7 +88,6 @@
   }
 }
 
-/* Mobile Landscape (≤ 768px) */
 @media (max-width: 768px) {
   .home-container {
     padding: 60px 20px 0;
@@ -122,7 +118,6 @@
   }
 }
 
-/* Mobile Portrait (≤ 480px) */
 @media (max-width: 480px) {
   .home-title {
     font-size: 24px;

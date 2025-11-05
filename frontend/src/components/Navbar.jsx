@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { FaBars, FaTimes } from "react-icons/fa"; // for hamburger icons
+import { FaBars, FaTimes } from "react-icons/fa";
 import "./Navbar.css";
 
 const Navbar = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const [menuOpen, setMenuOpen] = useState(false); // ✅ menu toggle state
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const token = localStorage.getItem("token");
   const roleRaw = (localStorage.getItem("role") || "").toLowerCase();
@@ -26,19 +26,18 @@ const Navbar = () => {
 
   const toggleMenu = () => setMenuOpen((prev) => !prev);
 
-  // Close menu when a link is clicked (mobile)
+  //close menu when link is clicked in mobile
   const handleLinkClick = () => setMenuOpen(false);
 
   return (
     <nav className="navbar">
-      {/* LEFT — Brand */}
+    
       <div className="nav-left">
         <Link className="nav-logo" to="/" onClick={handleLinkClick}>
           FundFusion <span>PitchHub</span>
         </Link>
       </div>
 
-      {/* Mobile Toggle Button */}
       <button
         className="nav-toggle"
         onClick={toggleMenu}
@@ -47,7 +46,6 @@ const Navbar = () => {
         {menuOpen ? <FaTimes size={22} /> : <FaBars size={22} />}
       </button>
 
-      {/* CENTER LINKS */}
       <div className={`nav-center ${menuOpen ? "open" : ""}`}>
         {!isAuth ? (
           <>
@@ -155,7 +153,6 @@ const Navbar = () => {
         )}
       </div>
 
-      {/* RIGHT — Role + Logout */}
       <div className="nav-right">
         <span className="role-text">{prettyRole}</span>
         {isAuth && (

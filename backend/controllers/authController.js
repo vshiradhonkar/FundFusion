@@ -2,11 +2,7 @@ import db from "../db.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-/**
- * =========================
- * REGISTER USER
- * =========================
- */
+// REGISTER USER
 export async function registerUser(req, res) {
   const { name, email, password, role } = req.body;
 
@@ -18,7 +14,7 @@ export async function registerUser(req, res) {
   }
 
   try {
-    // ✅ Check if email already exists
+    //Check if email already exists
     const [existingUser] = await db.query("SELECT id FROM users WHERE email = ?", [email]);
 
     if (existingUser.length > 0) {
@@ -28,10 +24,10 @@ export async function registerUser(req, res) {
       });
     }
 
-    // ✅ Hash password securely
+    // Hash password securely
     const hashedPassword = await bcrypt.hash(password, 8);
 
-    // ✅ Insert new user record
+    //Insert new user record
     await db.query(
       "INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)",
       [name.trim(), email.toLowerCase(), hashedPassword, role.toLowerCase()]
@@ -51,9 +47,7 @@ export async function registerUser(req, res) {
 }
 
 /**
- * =========================
- * LOGIN USER
- * =========================
+ * LOGIN USEr
  */
 export async function loginUser(req, res) {
   const { email, password } = req.body;
@@ -66,7 +60,7 @@ export async function loginUser(req, res) {
   }
 
   try {
-    // ✅ Find user by email
+    //Find user by email
     const [rows] = await db.query("SELECT * FROM users WHERE email = ?", [email.toLowerCase()]);
 
     if (rows.length === 0) {
@@ -78,7 +72,7 @@ export async function loginUser(req, res) {
 
     const user = rows[0];
 
-    // ✅ Validate password
+    //Validate password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(401).json({
@@ -87,7 +81,7 @@ export async function loginUser(req, res) {
       });
     }
 
-    // ✅ Generate JWT Token
+    //Generate JWT Token
     const token = jwt.sign(
       { id: user.id, role: user.role },
       process.env.JWT_SECRET,

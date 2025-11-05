@@ -1,24 +1,36 @@
-/* ===============================
-   Vision Section — FundFusion Style
-   =============================== */
-
 .vision-section {
-  background: linear-gradient(180deg, #0b0b14 0%, #1a012b 100%);
+  background: radial-gradient(circle at top, #0b0b14, #1a012b);
   color: #fff;
   padding: 80px 20px;
   text-align: center;
+  border-top: 1px solid rgba(168, 85, 247, 0.15);
+  position: relative;
+  overflow: hidden;
+}
+
+.vision-section::before {
+  content: "";
+  position: absolute;
+  top: -40px;
+  left: 0;
+  right: 0;
+  height: 80px;
+  background: radial-gradient(circle at top, rgba(26, 1, 43, 0.8), transparent);
+  pointer-events: none;
 }
 
 .vision-container {
   max-width: 1100px;
   margin: 0 auto;
+
+  position: relative;
 }
 
 .vision-title {
-  font-size: 36px;
+  font-size: 38px;
   font-weight: 700;
   color: #fff;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 
 .vision-title span {
@@ -29,36 +41,35 @@
   color: #ccc;
   font-size: 18px;
   margin-bottom: 50px;
-  line-height: 1.5;
+  line-height: 1.6;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-/* ===============================
-   Vision Cards Grid Layout
-   =============================== */
 .vision-cards {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* ✅ exactly 2 per row on desktop */
-  gap: 24px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 28px;
   padding: 0 10px;
   justify-items: center;
 }
 
-/* Individual Card */
 .vision-card {
   background: rgba(24, 23, 39, 0.85);
-  border: 1px solid rgba(168, 85, 247, 0.2);
+  border: 1px solid rgba(168, 85, 247, 0.25);
   border-radius: 16px;
-  padding: 24px 20px;
+  padding: 28px 24px;
   box-shadow: 0 0 20px rgba(168, 85, 247, 0.1);
   transition: all 0.3s ease;
   text-align: left;
   width: 100%;
-  max-width: 500px; /* ✅ keeps nice symmetry in two-column layout */
+  max-width: 500px;
 }
 
 .vision-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 0 30px rgba(168, 85, 247, 0.25);
+  transform: translateY(-6px);
+  box-shadow: 0 0 32px rgba(168, 85, 247, 0.25);
 }
 
 .vision-card h3 {
@@ -70,43 +81,52 @@
 .vision-card p {
   color: #cfcfe6;
   font-size: 15px;
-  line-height: 1.6;
+  line-height: 1.7;
 }
 
-/* ===============================
-   Responsive Tweaks
-   =============================== */
-
-/* Tablets (≤ 900px) */
-@media (max-width: 900px) {
+@media (max-width: 992px) {
   .vision-title {
-    font-size: 30px;
+    font-size: 32px;
   }
   .vision-subtitle {
     font-size: 16px;
   }
   .vision-cards {
-    grid-template-columns: repeat(2, 1fr); /* still 2 per row on tablets */
-    gap: 20px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
   }
 }
 
-/* Mobiles (≤ 700px) */
-@media (max-width: 700px) {
+@media (max-width: 768px) {
+  .vision-section {
+    padding: 60px 16px;
+  }
   .vision-cards {
-    grid-template-columns: 1fr; /* ✅ switch to single column */
+    grid-template-columns: 1fr;
     gap: 20px;
   }
-  .vision-section {
-    padding: 60px 14px;
-  }
   .vision-card {
-    padding: 20px;
+    padding: 22px 18px;
   }
   .vision-card h3 {
     font-size: 18px;
   }
   .vision-card p {
     font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .vision-title {
+    font-size: 26px;
+  }
+  .vision-subtitle {
+    font-size: 14.5px;
+  }
+  .vision-card {
+    padding: 18px 16px;
+  }
+  .vision-card p {
+    font-size: 13.5px;
   }
 }

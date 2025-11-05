@@ -1,7 +1,7 @@
 import db from "../db.js";
 
 /**
- * @desc Investor makes a new offer to a startup
+ *Investor makes a new offer to a startup
  * @route POST /api/offers/make
  */
 export async function makeOffer(req, res) {
@@ -37,7 +37,7 @@ export async function makeOffer(req, res) {
 }
 
 /**
- * @desc Get all offers for a specific startup (for startup users)
+ *Get all offers for a specific startup (for startup users)
  * @route GET /api/offers/startup/:startupId
  */
 export async function getOffersForStartup(req, res) {
@@ -66,7 +66,7 @@ export async function getOffersForStartup(req, res) {
 }
 
 /**
- * @desc Get all offers made by an investor (for investor dashboard)
+ *Get all offers made by investor(for investordashboard)
  * @route GET /api/offers/investor
  */
 export async function getOffersForInvestor(req, res) {
@@ -95,7 +95,7 @@ export async function getOffersForInvestor(req, res) {
 }
 
 /**
- * @desc Startup accepts an offer — creates a deal + updates status
+ *Startup accepts an offer — creates a deal + updates status
  * @route POST /api/offers/accept/:offerId
  */
 export async function acceptOffer(req, res) {
@@ -116,7 +116,7 @@ export async function acceptOffer(req, res) {
       return res.status(400).json({ success: false, message: "Offer already accepted." });
     }
 
-    // 🔒 Fetch the related startup to confirm ownership
+    //Fetch related startup to confirm ownership
     const [[startup]] = await db.query("SELECT * FROM startups WHERE id = ?", [offer.startup_id]);
 
     if (!startup) {
@@ -134,11 +134,11 @@ export async function acceptOffer(req, res) {
       return res.status(403).json({ success: false, message: "You do not own this startup." });
     }
 
-    // ✅ Update offer status
+    //Update offer status
     const [updateRes] = await db.query("UPDATE offers SET status='accepted' WHERE id=?", [offerId]);
     console.log("🟢 Offer marked as accepted:", updateRes);
 
-    // ✅ Create deal record
+    //Create deal record
     try {
       const [dealRes] = await db.query(
         "INSERT INTO deals (startup_id, investor_id, amount_final, equity_final) VALUES (?, ?, ?, ?)",
@@ -154,7 +154,7 @@ export async function acceptOffer(req, res) {
       });
     }
 
-    // ✅ Optional: Auto-reject all other pending offers for the same startup
+    // Auto-reject all other pending offers for the same startup
     await db.query(
       "UPDATE offers SET status='rejected' WHERE startup_id=? AND id<>? AND status='pending'",
       [offer.startup_id, offerId]
@@ -177,7 +177,7 @@ export async function acceptOffer(req, res) {
 }
 
 /**
- * @desc Startup rejects an offer
+ *Startup rejects an offer
  * @route POST /api/offers/reject/:offerId
  */
 export async function rejectOffer(req, res) {

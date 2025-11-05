@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../Auth.css";
 import axios from "axios";
-import { toast } from "react-toastify"; // ✅ Toastify import
+import { toast } from "react-toastify";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -13,7 +13,6 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    // basic validation
     if (!email || !password) {
       toast.warn("⚠️ Please enter both email and password.");
       return;
@@ -39,7 +38,7 @@ const Login = () => {
       localStorage.setItem("token", token);
       localStorage.setItem("role", role);
 
-      // role-based redirect
+      //role base redirecting
       switch (role) {
         case "startup":
           toast.success("🚀 Welcome back, Startup!");

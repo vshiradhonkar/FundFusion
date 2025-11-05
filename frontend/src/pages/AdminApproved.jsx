@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { toast } from "react-toastify"; // ✅ Toastify import
+import { toast } from "react-toastify";
 import "./Dashboard.css";
 
 const AdminApproved = () => {
