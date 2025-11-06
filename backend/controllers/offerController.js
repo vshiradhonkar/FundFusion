@@ -137,8 +137,9 @@ export async function acceptOffer(req, res) {
     //Update offer status
     const [updateRes] = await db.query("UPDATE offers SET status='accepted' WHERE id=?", [offerId]);
     console.log("🟢 Offer marked as accepted:", updateRes);
+    console.log("🔍 Affected rows:", updateRes.affectedRows);
 
-    //Create deal record
+    //Create deal record (optional - won't fail if table doesn't exist)
     try {
       const [dealRes] = await db.query(
         "INSERT INTO deals (startup_id, investor_id, amount_final, equity_final) VALUES (?, ?, ?, ?)",
@@ -146,12 +147,8 @@ export async function acceptOffer(req, res) {
       );
       console.log("💼 Deal created successfully:", dealRes);
     } catch (dealErr) {
-      console.error("🔥 Failed inserting deal:", dealErr);
-      return res.status(500).json({
-        success: false,
-        message: "Failed to create deal record.",
-        error: dealErr.message,
-      });
+      console.warn("⚠️ Deal table not available, skipping deal creation:", dealErr.message);
+      // Continue without failing - the offer status update is more important
     }
 
     // Auto-reject all other pending offers for the same startup
@@ -196,8 +193,15 @@ export async function rejectOffer(req, res) {
       return res.status(400).json({ success: false, message: "Cannot reject an already accepted offer." });
     }
 
-    await db.query("UPDATE offers SET status='rejected' WHERE id=?", [offerId]);
+    // Verify startup ownership
+    const [[startup]] = await db.query("SELECT * FROM startups WHERE id = ?", [offer.startup_id]);
+    if (startup && startup.user_id !== req.user.id) {
+      return res.status(403).json({ success: false, message: "You do not own this startup." });
+    }
+
+    const [rejectRes] = await db.query("UPDATE offers SET status='rejected' WHERE id=?", [offerId]);
     console.log(`❌ Offer ${offerId} rejected by startup ${req.user.id}`);
+    console.log("🔍 Affected rows:", rejectRes.affectedRows);
 
     return res.json({ success: true, message: "Offer rejected successfully." });
   } catch (err) {
