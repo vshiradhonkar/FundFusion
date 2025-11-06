@@ -84,6 +84,7 @@ const OffersPage = () => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
+      // Remove the offer from the list for startups
       setOffers((prev) => prev.filter((o) => o.id !== offerId));
 
       if (action === "accepted") {
@@ -91,6 +92,10 @@ const OffersPage = () => {
       } else {
         toast.info("🚫 Offer rejected.");
       }
+      
+      // Refresh the offers list to ensure consistency
+      setTimeout(() => fetchOffers(), 1000);
+      
     } catch (err) {
       console.error("⚠️ Offer response error:", err);
       toast.error("Error updating offer. Please try again.");
