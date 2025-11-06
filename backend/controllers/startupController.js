@@ -138,12 +138,16 @@ export async function updateStatus(req, res) {
       req.params.id,
     ]);
 
-    //Auto-log admin decision in a lightweight audit table
-    await db.query(
-      `INSERT INTO startup_audit (startup_id, admin_id, action_taken, timestamp)
-       VALUES (?, ?, ?, NOW())`,
-      [req.params.id, req.user.id, newStatus]
-    );
+    //Auto-log admin decision in a lightweight audit table (optional)
+    try {
+      await db.query(
+        `INSERT INTO startup_audit (startup_id, admin_id, action_taken, timestamp)
+         VALUES (?, ?, ?, NOW())`,
+        [req.params.id, req.user.id, newStatus]
+      );
+    } catch (auditErr) {
+      console.warn("⚠️ Audit table not available, skipping audit log:", auditErr.message);
+    }
 
     //If approved, notify investor route
     if (newStatus === "approved") {

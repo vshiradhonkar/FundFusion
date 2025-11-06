@@ -25,6 +25,10 @@ router.post("/make", authMiddleware, (req, res, next) => {
 //offers for  specific startup(startup view)
 router.get("/startup/:startupId", authMiddleware, (req, res, next) => {
   console.log("➡️ GET /api/offers/startup/" + req.params.startupId);
+  // Only allow startup users to view offers
+  if (req.user.role !== "startup") {
+    return res.status(403).json({ success: false, message: "Access denied. Only startups can view offers." });
+  }
   next();
 }, getOffersForStartup);
 

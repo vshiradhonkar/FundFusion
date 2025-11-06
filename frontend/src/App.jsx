@@ -62,7 +62,7 @@ export default function App() {
           <Route
             path="/investor-dashboard"
             element={
-              <ProtectedRoute allow={["investor"]}>
+              <ProtectedRoute allow={["startup", "investor"]}>
                 <InvestorDashboard />
               </ProtectedRoute>
             }

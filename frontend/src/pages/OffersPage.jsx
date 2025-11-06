@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { getUserRole } from "../utils/roleAccess.js";
 import "./Dashboard.css";
 
 const OffersPage = () => {
   const [offers, setOffers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const role = (localStorage.getItem("role") || "").toLowerCase();
+  const role = getUserRole();
   const token = localStorage.getItem("token");
 
   useEffect(() => {
@@ -22,40 +23,45 @@ const OffersPage = () => {
         let res;
 
         if (role === "investor") {
-          //fetch ofers made by investor
+          // Fetch offers made by the investor
           res = await axios.get("http://localhost:5000/api/offers/investor", {
             headers: { Authorization: `Bearer ${token}` },
           });
         } else if (role === "startup") {
-          //fetch startup ID dynamically
-          const pitchRes = await axios.get(
-            "http://localhost:5000/api/startups/my-pitches",
-            { headers: { Authorization: `Bearer ${token}` } }
-          );
-
-          if (!pitchRes.data.length) {
-            toast.info("You haven’t submitted any startup pitches yet.");
+          // First get the startup's own pitches to find their startup ID
+          const startupRes = await axios.get("http://localhost:5000/api/startups/my-pitches", {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          
+          if (startupRes.data.length === 0) {
+            toast.info("Create a pitch first to receive offers.");
             setOffers([]);
             setLoading(false);
             return;
           }
 
-          const startupId = pitchRes.data[0].id;
-          console.log("📦 Fetched Startup ID:", startupId);
+          // Get offers for the first approved startup
+          const approvedStartup = startupRes.data.find(s => s.status === 'approved');
+          if (!approvedStartup) {
+            toast.info("Your pitch needs to be approved before you can receive offers.");
+            setOffers([]);
+            setLoading(false);
+            return;
+          }
 
-          // fetch ofers received 4 startup
-          res = await axios.get(
-            `http://localhost:5000/api/offers/startup/${startupId}`,
-            { headers: { Authorization: `Bearer ${token}` } }
-          );
+          // Fetch offers for this startup
+          res = await axios.get(`http://localhost:5000/api/offers/startup/${approvedStartup.id}`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
         } else {
-          toast.error("Invalid user role.");
+          toast.error("🚫 Access denied.");
+          setLoading(false);
           return;
         }
 
         setOffers(Array.isArray(res.data) ? res.data : []);
 
-        if (!res.data.length) {
+        if (res.data.length === 0) {
           toast.info("No offers available yet.");
         }
       } catch (err) {
@@ -72,8 +78,9 @@ const OffersPage = () => {
 
   const handleResponse = async (offerId, action) => {
     try {
+      const endpoint = action === "accepted" ? "accept" : "reject";
       await axios.post(
-        `http://localhost:5000/api/offers/accept/${offerId}`,
+        `http://localhost:5000/api/offers/${endpoint}/${offerId}`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -91,7 +98,6 @@ const OffersPage = () => {
     }
   };
 
-
   if (loading) {
     return (
       <div className="dashboard-content">
@@ -100,7 +106,6 @@ const OffersPage = () => {
       </div>
     );
   }
-
 
   return (
     <div className="dashboard-content">
