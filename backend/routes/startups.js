@@ -73,6 +73,95 @@ router.post("/pending/:id/approve", authMiddleware, adminOnly, async (req, res, 
 }, updateStatus);
 
 /**
+ * @route PUT /api/startups/update/:id
+ * Update startup pitch details
+ */
+router.put("/update/:id", authMiddleware, async (req, res) => {
+  const { name, pitch_text, money_requested, equity_offered } = req.body;
+  const startupId = req.params.id;
+
+  try {
+    // Check if startup exists and user owns it (or is admin)
+    const [[startup]] = await db.query("SELECT * FROM startups WHERE id = ?", [startupId]);
+    if (!startup) {
+      return res.status(404).json({ success: false, message: "Startup not found" });
+    }
+
+    if (req.user.role !== "admin" && startup.user_id !== req.user.id) {
+      return res.status(403).json({ success: false, message: "Access denied" });
+    }
+
+    // Update startup details
+    await db.query(
+      "UPDATE startups SET name = ?, pitch_text = ?, money_requested = ?, equity_offered = ? WHERE id = ?",
+      [name || startup.name, pitch_text || startup.pitch_text, money_requested || startup.money_requested, equity_offered || startup.equity_offered, startupId]
+    );
+
+    return res.json({ success: true, message: "Startup updated successfully" });
+  } catch (err) {
+    console.error("❌ Update startup error:", err);
+    return res.status(500).json({ success: false, message: "Server error" });
+  }
+});
+
+/**
+ * @route PUT /api/startups/status/:id
+ * Update startup status (admin only)
+ */
+router.put("/status/:id", authMiddleware, adminOnly, async (req, res) => {
+  const { status } = req.body;
+  const startupId = req.params.id;
+
+  if (!['pending', 'approved', 'rejected'].includes(status)) {
+    return res.status(400).json({ success: false, message: "Invalid status" });
+  }
+
+  try {
+    const [[startup]] = await db.query("SELECT * FROM startups WHERE id = ?", [startupId]);
+    if (!startup) {
+      return res.status(404).json({ success: false, message: "Startup not found" });
+    }
+
+    await db.query("UPDATE startups SET status = ? WHERE id = ?", [status, startupId]);
+    return res.json({ success: true, message: `Startup status updated to ${status}` });
+  } catch (err) {
+    console.error("❌ Update status error:", err);
+    return res.status(500).json({ success: false, message: "Server error" });
+  }
+});
+
+/**
+ * @route DELETE /api/startups/delete/:id
+ * Delete startup pitch
+ */
+router.delete("/delete/:id", authMiddleware, async (req, res) => {
+  const startupId = req.params.id;
+
+  try {
+    const [[startup]] = await db.query("SELECT * FROM startups WHERE id = ?", [startupId]);
+    if (!startup) {
+      return res.status(404).json({ success: false, message: "Startup not found" });
+    }
+
+    // Only startup owner or admin can delete
+    if (req.user.role !== "admin" && startup.user_id !== req.user.id) {
+      return res.status(403).json({ success: false, message: "Access denied" });
+    }
+
+    // Delete related offers first
+    await db.query("DELETE FROM offers WHERE startup_id = ?", [startupId]);
+    
+    // Delete startup
+    await db.query("DELETE FROM startups WHERE id = ?", [startupId]);
+
+    return res.json({ success: true, message: "Startup deleted successfully" });
+  } catch (err) {
+    console.error("❌ Delete startup error:", err);
+    return res.status(500).json({ success: false, message: "Server error" });
+  }
+});
+
+/**
  * @route GET /api/startups/:id
  *Fetch startup by ID
  * matches any /:id

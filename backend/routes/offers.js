@@ -69,4 +69,35 @@ router.post("/reject/:offerId", authMiddleware, (req, res, next) => {
   next();
 }, rejectOffer);
 
+/**
+ * @route DELETE /api/offers/delete/:id
+ * Delete an offer
+ */
+router.delete("/delete/:id", authMiddleware, async (req, res) => {
+  const offerId = req.params.id;
+
+  try {
+    const [[offer]] = await db.query("SELECT * FROM offers WHERE id = ?", [offerId]);
+    if (!offer) {
+      return res.status(404).json({ success: false, message: "Offer not found" });
+    }
+
+    // Only investor who made the offer or admin can delete
+    if (req.user.role !== "admin" && offer.investor_id !== req.user.id) {
+      return res.status(403).json({ success: false, message: "Access denied" });
+    }
+
+    // Only allow deletion of pending offers
+    if (offer.status !== "pending") {
+      return res.status(400).json({ success: false, message: "Cannot delete accepted/rejected offers" });
+    }
+
+    await db.query("DELETE FROM offers WHERE id = ?", [offerId]);
+    return res.json({ success: true, message: "Offer deleted successfully" });
+  } catch (err) {
+    console.error("❌ Delete offer error:", err);
+    return res.status(500).json({ success: false, message: "Server error" });
+  }
+});
+
 export default router;
