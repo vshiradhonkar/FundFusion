@@ -2,11 +2,11 @@ import express from "express";
 import {
   makeOffer,
   getOffersForStartup,
-  getOffersForInvestor,
   acceptOffer,
   rejectOffer,
 } from "../controllers/offerController.js";
 import { authMiddleware } from "../middleware/authMiddleware.js";
+import db from "../db.js";
 
 const router = express.Router();
 
@@ -35,8 +35,27 @@ router.get("/startup/:startupId", authMiddleware, (req, res, next) => {
 // all offers made by investor
 router.get("/investor", authMiddleware, (req, res, next) => {
   console.log("➡️ GET /api/offers/investor");
+  // Only allow investor users to view their offers
+  if (req.user.role !== "investor") {
+    return res.status(403).json({ success: false, message: "Access denied. Only investors can view offers." });
+  }
   next();
-}, getOffersForInvestor);
+}, async (req, res) => {
+  try {
+    const [rows] = await db.query(
+      `SELECT o.*, s.name AS startup_name, s.pitch_text
+       FROM offers o
+       JOIN startups s ON o.startup_id = s.id
+       WHERE o.investor_id = ?
+       ORDER BY o.id DESC`,
+      [req.user.id]
+    );
+    return res.json(rows);
+  } catch (err) {
+    console.error("❌ Error fetching investor offers:", err);
+    return res.status(500).json({ success: false, message: "Server error" });
+  }
+});
 
 //Startup accepts an offer — creates a deal
 router.post("/accept/:offerId", authMiddleware, (req, res, next) => {
