@@ -38,19 +38,22 @@ const OffersPage = () => {
           return;
         }
 
-        // Get offers for the first approved startup
-        const approvedStartup = startupRes.data.find(s => s.status === 'approved');
-        if (!approvedStartup) {
-          toast.info("Your pitch needs to be approved before you can receive offers.");
-          setOffers([]);
-          setLoading(false);
-          return;
+        // Get offers for all startup pitches (approved ones should have offers)
+        let allOffers = [];
+        for (const startup of startupRes.data) {
+          try {
+            const offerRes = await axios.get(`http://localhost:5000/api/offers/startup/${startup.id}`, {
+              headers: { Authorization: `Bearer ${token}` },
+            });
+            if (offerRes.data && offerRes.data.length > 0) {
+              allOffers = [...allOffers, ...offerRes.data];
+            }
+          } catch (err) {
+            console.warn(`No offers found for startup ${startup.id}`);
+          }
         }
-
-        // Fetch offers for this startup
-        res = await axios.get(`http://localhost:5000/api/offers/startup/${approvedStartup.id}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        
+        res = { data: allOffers };
       } else {
         toast.error("🚫 Access denied.");
         setLoading(false);
@@ -60,7 +63,12 @@ const OffersPage = () => {
       setOffers(Array.isArray(res.data) ? res.data : []);
 
       if (res.data.length === 0) {
+        if (role === "startup") {
+          console.log("Debug: No offers found for startup. Pitches:", startupRes?.data);
+        }
         toast.info("No offers available yet.");
+      } else {
+        console.log(`Found ${res.data.length} offers for ${role}`);
       }
     } catch (err) {
       console.error("❌ Offer fetch error:", err);
@@ -115,16 +123,14 @@ const OffersPage = () => {
     <div className="dashboard-content">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
         <h1>{role === "investor" ? "My Offers" : "Received Offers"}</h1>
-        {role === "investor" && (
-          <button 
-            className="btn" 
-            onClick={fetchOffers}
-            disabled={loading}
-            style={{ padding: '0.5rem 1rem' }}
-          >
-            {loading ? "Refreshing..." : "🔄 Refresh"}
-          </button>
-        )}
+        <button 
+          className="btn" 
+          onClick={fetchOffers}
+          disabled={loading}
+          style={{ padding: '0.5rem 1rem' }}
+        >
+          {loading ? "Refreshing..." : "🔄 Refresh"}
+        </button>
       </div>
 
       {offers.length === 0 ? (
