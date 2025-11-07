@@ -8,13 +8,35 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState({});
   const navigate = useNavigate();
+
+  const validateField = (name, value) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+    
+    switch (name) {
+      case 'email':
+        return value && !emailRegex.test(value) ? 'Invalid email format' : '';
+      case 'password':
+        return value && !passwordRegex.test(value) ? 'Password must be at least 8 characters with uppercase, lowercase, and number' : '';
+      default:
+        return '';
+    }
+  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
 
     if (!email || !password) {
       toast.warn("⚠️ Please enter both email and password.");
+      return;
+    }
+
+    // Check for validation errors
+    const hasErrors = Object.values(errors).some(error => error !== '');
+    if (hasErrors) {
+      toast.error("❌ Please fix validation errors before submitting.");
       return;
     }
 
@@ -81,17 +103,27 @@ const Login = () => {
             type="email"
             placeholder="Email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => {
+              setEmail(e.target.value);
+              const error = validateField('email', e.target.value);
+              setErrors({ ...errors, email: error });
+            }}
             required
           />
+          {errors.email && <div style={{color: '#ff6b6b', fontSize: '0.8rem', marginTop: '0.25rem'}}>{errors.email}</div>}
           <input
             className="auth-input"
             type="password"
             placeholder="Password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => {
+              setPassword(e.target.value);
+              const error = validateField('password', e.target.value);
+              setErrors({ ...errors, password: error });
+            }}
             required
           />
+          {errors.password && <div style={{color: '#ff6b6b', fontSize: '0.8rem', marginTop: '0.25rem'}}>{errors.password}</div>}
 
           <button type="submit" className="auth-btn" disabled={loading}>
             {loading ? "Authenticating..." : "Login"}

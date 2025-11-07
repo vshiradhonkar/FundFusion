@@ -13,9 +13,31 @@ const CreatePitch = () => {
   });
 
   const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState({});
 
-  const handleChange = (e) =>
-    setForm({ ...form, [e.target.name]: e.target.value });
+  const validateField = (name, value) => {
+    const nameRegex = /^[A-Za-z\s]+$/;
+    const numericRegex = /^\d+$/;
+    
+    switch (name) {
+      case 'name':
+        return value && !nameRegex.test(value) ? 'Name can only contain letters and spaces' : '';
+      case 'money_requested':
+        return value && !numericRegex.test(value) ? 'Money requested must be numeric only' : '';
+      case 'equity_offered':
+        return value && !numericRegex.test(value) ? 'Equity offered must be numeric only' : '';
+      default:
+        return '';
+    }
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm({ ...form, [name]: value });
+    
+    const error = validateField(name, value);
+    setErrors({ ...errors, [name]: error });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,6 +46,13 @@ const CreatePitch = () => {
     
     if (!form.name || !form.pitch_text || !form.money_requested) {
       toast.warn("⚠️ Please fill all required fields!");
+      return;
+    }
+
+    // Check for validation errors
+    const hasErrors = Object.values(errors).some(error => error !== '');
+    if (hasErrors) {
+      toast.error("❌ Please fix validation errors before submitting.");
       return;
     }
 
@@ -78,6 +107,7 @@ const CreatePitch = () => {
           onChange={handleChange}
           required
         />
+        {errors.name && <div style={{color: 'red', fontSize: '0.8rem', marginTop: '0.25rem'}}>{errors.name}</div>}
 
         <textarea
           name="pitch_text"
@@ -89,20 +119,22 @@ const CreatePitch = () => {
 
         <input
           name="money_requested"
-          type="number"
+          type="text"
           placeholder="Money Requested (₹)"
           value={form.money_requested}
           onChange={handleChange}
           required
         />
+        {errors.money_requested && <div style={{color: 'red', fontSize: '0.8rem', marginTop: '0.25rem'}}>{errors.money_requested}</div>}
 
         <input
           name="equity_offered"
-          type="number"
+          type="text"
           placeholder="Equity Offered (%)"
           value={form.equity_offered}
           onChange={handleChange}
         />
+        {errors.equity_offered && <div style={{color: 'red', fontSize: '0.8rem', marginTop: '0.25rem'}}>{errors.equity_offered}</div>}
 
         <input
           name="pitch_video_url"
