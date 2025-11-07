@@ -24,6 +24,17 @@ export async function registerUser(req, res) {
       });
     }
 
+    // Check if trying to register as admin and admin already exists
+    if (role.toLowerCase() === 'admin') {
+      const [existingAdmin] = await db.query("SELECT id FROM users WHERE role = 'admin'");
+      if (existingAdmin.length > 0) {
+        return res.status(400).json({
+          success: false,
+          message: "Only one admin account is allowed.",
+        });
+      }
+    }
+
     // Hash password securely
     const hashedPassword = await bcrypt.hash(password, 8);
 

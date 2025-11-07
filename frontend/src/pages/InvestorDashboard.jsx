@@ -83,12 +83,18 @@ const InvestorDashboard = () => {
               <p>{s.pitch_text}</p>
               <div className="meta-row">
                 <span>💸 ₹ {s.money_requested}</span>
-                <button
-                  className="primary-btn"
-                  onClick={() => makeOffer(s.id)}
-                >
-                  Make Offer
-                </button>
+                {s.hasDeal ? (
+                  <button className="primary-btn" disabled>
+                    Deal Completed
+                  </button>
+                ) : (
+                  <button
+                    className="primary-btn"
+                    onClick={() => makeOffer(s.id)}
+                  >
+                    Make Offer
+                  </button>
+                )}
               </div>
             </div>
           ))}

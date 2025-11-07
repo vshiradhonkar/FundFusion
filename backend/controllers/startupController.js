@@ -41,9 +41,11 @@ export async function createPitch(req, res) {
 export async function getApprovedStartups(req, res) {
   try {
     const [rows] = await db.query(
-      `SELECT s.*, u.name AS founder_name, u.email AS founder_email
+      `SELECT s.*, u.name AS founder_name, u.email AS founder_email,
+              CASE WHEN d.id IS NOT NULL THEN true ELSE false END AS hasDeal
        FROM startups s
        JOIN users u ON s.user_id = u.id
+       LEFT JOIN deals d ON s.id = d.startup_id
        WHERE s.status = 'approved'
        ORDER BY s.id DESC`
     );

@@ -15,6 +15,16 @@ export async function makeOffer(req, res) {
   }
 
   try {
+    // Check if a deal already exists for this startup
+    const [existingDeal] = await db.query("SELECT id FROM deals WHERE startup_id = ?", [startup_id]);
+    
+    if (existingDeal.length > 0) {
+      return res.status(400).json({
+        success: false,
+        message: "A deal has already been formed for this startup. No more offers allowed.",
+      });
+    }
+
     console.log(`💰 New offer: investor ${req.user.id} → startup ${startup_id}`);
 
     await db.query(
